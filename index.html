@@ -114,7 +114,7 @@
   <div id="garbage-mode">
     <img src="gomidashi_woman.png" alt="垃圾車提醒">
     <audio id="garbage-music" loop>
-      <source src="第五代 垃圾車 音樂 少女的祈禱 單音版 (高音質正版音檔).mp3" type="audio/mpeg">
+      <source src="https://dl.dropboxusercontent.com/scl/fi/9xj7ogdfabf1rbgy96ykk/prayer.mp3?rlkey=33dxm8aax3n6x1x8hj1q7wqwa&raw=1" type="audio/mpeg">
     </audio>
   </div>
 
@@ -185,7 +185,7 @@
       const now = new Date();
       const h = now.getHours();
       const m = now.getMinutes();
-      const isGarbageTime = h === 12 && m >= 20 && m <= 21;
+      const isGarbageTime = h === 12 && m === 20;
       const garbageDiv = document.getElementById("garbage-mode");
       const music = document.getElementById("garbage-music");
       const allContent = document.body.querySelectorAll("body > *:not(#garbage-mode)");
