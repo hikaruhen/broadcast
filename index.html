@@ -113,7 +113,7 @@
 
   <div id="garbage-mode">
     <img src="gomidashi_woman.png" alt="垃圾車提醒">
-    <audio id="garbage-music" loop>
+    <audio id="garbage-music" autoplay muted loop>
       <source src="https://dl.dropboxusercontent.com/scl/fi/9xj7ogdfabf1rbgy96ykk/prayer.mp3?rlkey=33dxm8aax3n6x1x8hj1q7wqwa&raw=1" type="audio/mpeg">
     </audio>
   </div>
@@ -194,6 +194,7 @@
         garbageDiv.style.display = "flex";
         allContent.forEach(el => el.style.display = "none");
         if (music && music.paused) {
+          music.muted = false;
           music.play().catch(() => console.log("音樂播放被阻擋"));
         }
       } else {
