@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -77,38 +76,32 @@
     </style>
 </head>
 <body>
+    <!-- 背景圖片（會自動輪播） -->
     <div class="background">
         <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be01.jpg" class="active">
         <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be02.jpg">
         <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be03.jpg">
-        <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be04.jpg">
-        <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be05.jpg">
-        <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be06.jpg">
-        <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be07.jpg">
-        <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be08.jpg">
-        <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be09.jpg">
     </div>
 
+    <!-- 上方時間顯示 -->
     <div class="time" id="clock">載入中...</div>
 
+    <!-- 中間輪播公告內容 -->
     <div class="content">
         <div class="page active">📢 無聲廣播首頁</div>
-        <div class="page">🎉 祝本月壽星生日快樂：林沛潔、許立楷</div>
+        <div class="page">🎉 本月壽星：林沛潔、許立楷</div>
         <div class="page">🙇 作業沒交：</div>
-        <div class="page">🙇‍♀️ 沒交聯絡簿：</div>
-        <div class="page">🍙 誰來午餐：</div>
-        <div class="page">💯 分數未登錄：</div>
-        <div class="page">🤖 掃地機器人：</div>
-        <div class="page">😭 每日簽到：</div>
         <div class="page">📚 本日備忘：</div>
     </div>
 
+    <!-- 跑馬燈 -->
     <div class="marquee">
-        <div class="marquee-content">【提醒】上課中請保持安靜 ✦ YYY ✦ XXX ✦ 本日值日生：A、B、C、D ✦</div>
+        <div class="marquee-content">【提醒】請保持安靜 ✦ 本日值日生：A、B、C、D ✦</div>
     </div>
 
+    <!-- JavaScript 控制區塊 -->
     <script>
-        // 時間顯示
+        // 更新時間顯示
         function updateClock() {
             const now = new Date();
             const days = ['日', '一', '二', '三', '四', '五', '六'];
@@ -121,11 +114,10 @@
                               String(now.getSeconds()).padStart(2, '0');
             document.getElementById('clock').textContent = formatted;
         }
-
-        setInterval(updateClock, 10000);
+        setInterval(updateClock, 1000);
         updateClock();
 
-        // 公告輪播
+        // 輪播中間公告
         const pages = document.querySelectorAll('.page');
         let pageIndex = 0;
         setInterval(() => {
@@ -134,14 +126,14 @@
             pages[pageIndex].classList.add('active');
         }, 3000);
 
-        // 背景輪播
+        // 輪播背景圖片
         const bgImgs = document.querySelectorAll('.background img');
         let bgIndex = 0;
         setInterval(() => {
             bgImgs[bgIndex].classList.remove('active');
             bgIndex = (bgIndex + 1) % bgImgs.length;
             bgImgs[bgIndex].classList.add('active');
-        }, 5000); // 每 10 秒換背景
+        }, 5000);
     </script>
 </body>
 </html>
