@@ -118,30 +118,51 @@
         setInterval(updateClock, 1000);
         updateClock();
 
+        
         // 從 Google Sheets 載入公告內容與跑馬燈內容（欄0是公告，欄1是跑馬燈）
         fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vT4vzU7xZk5cwgUvNLxqjcDwn5ZnZ63o3XH8r5kK7oTvKQPSDjTezBWQbS-4wfyACro_-kCgJ1iNfFt/pub?output=csv')
           .then(response => response.text())
           .then(csvText => {
-            
-    const lines = [];
-    csvText.trim().split('\n').forEach(row => {
-      let a = "", b = "";
-      const commaIndex = row.indexOf(",");
-      if (commaIndex >= 0) {
-        a = row.slice(0, commaIndex).trim();
-        b = row.slice(commaIndex + 1).trim();
-      } else {
-        a = row.trim();
-        b = "";
-      }
-      lines.push([a, b]);
-    });
+            const rows = csvText.trim().split('\n');
+            const lines = rows.map(row => {
+              const commaIndex = row.indexOf(",");
+              if (commaIndex === -1) return [row, ""];
+              return [row.slice(0, commaIndex).trim(), row.slice(commaIndex + 1).trim()];
+            });
+
+            const container = document.getElementById('announcement-area');
+            container.innerHTML = '';
+            let marqueeText = "";
+            lines.forEach((columns, index) => {
+              const page = document.createElement('div');
+              page.className = 'page';
+              if (index === 0) page.classList.add('active');
+              page.textContent = columns[0];
+              container.appendChild(page);
+              if (columns[1]) marqueeText += columns[1] + ' ✦ ';
+            });
+
+            const marquee = document.getElementById('marquee-text');
+            if (marquee) marquee.textContent = marqueeText.trim() || '　';
+
+            const pages = document.querySelectorAll('.page');
+            let pageIndex = 0;
+            setInterval(() => {
+              pages[pageIndex].classList.remove('active');
+              pageIndex = (pageIndex + 1) % pages.length;
+              pages[pageIndex].classList.add('active');
+            }, 3000);
+          });
     
+        fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vT4vzU7xZk5cwgUvNLxqjcDwn5ZnZ63o3XH8r5kK7oTvKQPSDjTezBWQbS-4wfyACro_-kCgJ1iNfFt/pub?output=csv')
+          .then(response => response.text())
+          .then(csvText => {
+            const lines = csvText.trim().split('\n');
             const container = document.getElementById('announcement-area');
             container.innerHTML = '';
             let marqueeText = "";
             lines.forEach((line, index) => {
-              const columns = line;
+              const columns = line.match(/(?:"([^"]*)"|[^,]*)/g).map(cell => cell.replace(/^"|"$/g, ''));
               const page = document.createElement('div');
               page.className = 'page';
               if (index === 0) page.classList.add('active');
@@ -166,28 +187,14 @@
         fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vT4vzU7xZk5cwgUvNLxqjcDwn5ZnZ63o3XH8r5kK7oTvKQPSDjTezBWQbS-4wfyACro_-kCgJ1iNfFt/pub?output=csv')
           .then(response => response.text())
           .then(csvText => {
-            
-    const lines = [];
-    csvText.trim().split('\n').forEach(row => {
-      let a = "", b = "";
-      const commaIndex = row.indexOf(",");
-      if (commaIndex >= 0) {
-        a = row.slice(0, commaIndex).trim();
-        b = row.slice(commaIndex + 1).trim();
-      } else {
-        a = row.trim();
-        b = "";
-      }
-      lines.push([a, b]);
-    });
-    
+            const lines = csvText.trim().split('\n');
             const container = document.getElementById('announcement-area');
             container.innerHTML = '';
             lines.forEach((line, index) => {
               const page = document.createElement('div');
               page.className = 'page';
               if (index === 0) page.classList.add('active');
-              page.textContent = columns[0];
+              page.textContent = line;
               container.appendChild(page);
             });
 
