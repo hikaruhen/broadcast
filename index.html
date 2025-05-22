@@ -119,7 +119,7 @@
         updateClock();
 
         // 從 Google Sheets 載入公告內容
-        fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vTCf4uztUzBhYkg9SnfKc7mc4dMtbVRL4zDqEUWhP7ZK02y3DToBYYZjAj2S1VjQAKApfW2anbyO0Uw/pub?output=csv')
+        fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vT4vzU7xZk5cwgUvNLxqjcDwn5ZnZ63o3XH8r5kK7oTvKQPSDjTezBWQbS-4wfyACro_-kCgJ1iNfFt/pub?output=csv')
           .then(response => response.text())
           .then(csvText => {
             const lines = csvText.trim().split('\n');
