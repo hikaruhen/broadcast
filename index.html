@@ -122,12 +122,29 @@
         fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vT4vzU7xZk5cwgUvNLxqjcDwn5ZnZ63o3XH8r5kK7oTvKQPSDjTezBWQbS-4wfyACro_-kCgJ1iNfFt/pub?output=csv')
           .then(response => response.text())
           .then(csvText => {
-            const lines = csvText.trim().split('\n');
+            
+    const lines = [];
+    csvText.trim().split('\n').forEach(row => {
+      let a = "", b = "";
+      if (row.startsWith('"')) {
+        let split = row.match(/^"((?:[^"]|"")*)"(?:,"((?:[^"]|"")*)")?/);
+        if (split) {
+          a = split[1].replace(/""/g, '"');
+          b = split[2] ? split[2].replace(/""/g, '"') : "";
+        } else {
+          a = row;
+        }
+      } else {
+        [a, b] = row.split(',', 2);
+      }
+      lines.push([a, b]);
+    });
+    
             const container = document.getElementById('announcement-area');
             container.innerHTML = '';
             let marqueeText = "";
             lines.forEach((line, index) => {
-              const columns = line.match(/(?:"([^"]*)"|[^,]*)/g).map(cell => cell.replace(/^"|"$/g, ''));
+              const columns = line;
               const page = document.createElement('div');
               page.className = 'page';
               if (index === 0) page.classList.add('active');
@@ -152,7 +169,24 @@
         fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vT4vzU7xZk5cwgUvNLxqjcDwn5ZnZ63o3XH8r5kK7oTvKQPSDjTezBWQbS-4wfyACro_-kCgJ1iNfFt/pub?output=csv')
           .then(response => response.text())
           .then(csvText => {
-            const lines = csvText.trim().split('\n');
+            
+    const lines = [];
+    csvText.trim().split('\n').forEach(row => {
+      let a = "", b = "";
+      if (row.startsWith('"')) {
+        let split = row.match(/^"((?:[^"]|"")*)"(?:,"((?:[^"]|"")*)")?/);
+        if (split) {
+          a = split[1].replace(/""/g, '"');
+          b = split[2] ? split[2].replace(/""/g, '"') : "";
+        } else {
+          a = row;
+        }
+      } else {
+        [a, b] = row.split(',', 2);
+      }
+      lines.push([a, b]);
+    });
+    
             const container = document.getElementById('announcement-area');
             container.innerHTML = '';
             lines.forEach((line, index) => {
