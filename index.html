@@ -44,12 +44,15 @@
             align-items: center;
         }
         .page {
-            display: none;
-            font-size: 2em;
-            text-align: center;
-            padding: 20px;
-            background-color: rgba(0, 0, 0, 0.5);
-            border-radius: 20px;
+                display: none;
+                font-size: 4em;
+                text-align: center;
+                padding: 20px;
+                background-color: rgba(0, 0, 0, 0.5);
+                border-radius: 20px;
+                /* 👉 加上這兩行解決超長不換行問題 */
+                word-break: break-word;      /* 單字太長也會斷行 */
+                white-space: normal;         /* 正常換行（預設是 nowrap 不換行） */
         }
         .page.active {
             display: block;
@@ -99,7 +102,7 @@
         <div class="page">🙇 作業沒交：</div>
         <div class="page">🙇‍♀️ 沒交聯絡簿：</div>
         <div class="page">🍙 誰來午餐：</div>
-        <div class="page">💯 分數未登錄：CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC</div>
+        <div class="page">💯 分數未登錄：CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC</div>
         <div class="page">🤖 掃地機器人：</div>
         <div class="page">😭 每日簽到：</div>
         <div class="page">📚 本日備忘：</div>
