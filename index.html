@@ -123,9 +123,18 @@
           .then(response => response.text())
           .then(csvText => {
             
-    const lines = csvText.trim().split('\n').map(row => {
-      const parts = row.split(/,(.+)/); // 只分成兩欄：第一個逗號之前是 A，之後是 B
-      return [parts[0].trim(), (parts[1] || "").trim()];
+    const lines = [];
+    csvText.trim().split('\n').forEach(row => {
+      let a = "", b = "";
+      const commaIndex = row.indexOf(",");
+      if (commaIndex >= 0) {
+        a = row.slice(0, commaIndex).trim();
+        b = row.slice(commaIndex + 1).trim();
+      } else {
+        a = row.trim();
+        b = "";
+      }
+      lines.push([a, b]);
     });
     
             const container = document.getElementById('announcement-area');
@@ -158,9 +167,18 @@
           .then(response => response.text())
           .then(csvText => {
             
-    const lines = csvText.trim().split('\n').map(row => {
-      const parts = row.split(/,(.+)/); // 只分成兩欄：第一個逗號之前是 A，之後是 B
-      return [parts[0].trim(), (parts[1] || "").trim()];
+    const lines = [];
+    csvText.trim().split('\n').forEach(row => {
+      let a = "", b = "";
+      const commaIndex = row.indexOf(",");
+      if (commaIndex >= 0) {
+        a = row.slice(0, commaIndex).trim();
+        b = row.slice(commaIndex + 1).trim();
+      } else {
+        a = row.trim();
+        b = "";
+      }
+      lines.push([a, b]);
     });
     
             const container = document.getElementById('announcement-area');
