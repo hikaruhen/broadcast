@@ -139,7 +139,11 @@
               if (index === 0) page.classList.add('active');
               page.textContent = columns[0];
               container.appendChild(page);
-              if (columns[1]) marqueeText += columns[1] + ' ✦ ';
+              
+    if (columns.length > 1 && columns[1].trim()) {
+      marqueeText += columns[1].trim() + ' ✦ ';
+    }
+    
             });
 
             const marquee = document.getElementById('marquee-text');
@@ -168,7 +172,11 @@
               if (index === 0) page.classList.add('active');
               page.textContent = columns[0] || "";  // 第一欄：公告內容
               container.appendChild(page);
-              if (columns[1]) marqueeText += columns[1] + ' ✦ '; // 第二欄：跑馬燈
+              
+    if (columns.length > 1 && columns[1].trim()) {
+      marqueeText += columns[1].trim() + ' ✦ ';
+    }
+     // 第二欄：跑馬燈
             });
 
             // 更新跑馬燈內容
