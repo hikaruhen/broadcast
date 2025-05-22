@@ -1,0 +1,197 @@
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>班級無聲廣播系統</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft JhengHei", sans-serif;
+            overflow: hidden;
+            color: #fff;
+        }
+        .background {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+        }
+        .background img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 2s;
+        }
+        .background img.active {
+            opacity: 1;
+        }
+        .time {
+            font-size: 2em;
+            text-align: center;
+            padding: 10px;
+        }
+        .content {
+            position: absolute;
+            top: 80px;
+            bottom: 50px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .page {
+            display: none;
+            font-size: 4em;
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
+            word-break: break-word;
+            white-space: normal;
+        }
+        .page.active {
+            display: block;
+        }
+        .marquee {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            color: #ff0;
+            font-size: 2.5em;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .marquee-content {
+            display: inline-block;
+            padding-left: 100%;
+            animation: scroll-left 10s linear infinite;
+        }
+        @keyframes scroll-left {
+            from { transform: translateX(0%); }
+            to { transform: translateX(-100%); }
+        }
+    </style>
+</head>
+<body>
+    <div class="background">
+        <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be01.jpg" class="active">
+        <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be02.jpg">
+        <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be03.jpg">
+        <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be04.jpg">
+        <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be05.jpg">
+        <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be06.jpg">
+        <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be07.jpg">
+        <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be08.jpg">
+        <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be09.jpg">
+    </div>
+
+    <div class="time" id="clock">載入中...</div>
+
+    <div class="content" id="announcement-area">
+        <div class="page active">📢 載入中...</div>
+    </div>
+
+    <div class="marquee">
+        <div class="marquee-content" id="marquee-text">載入中...</div>
+    </div>
+
+    <script>
+        // 更新時間顯示
+        function updateClock() {
+            const now = new Date();
+            const days = ['日', '一', '二', '三', '四', '五', '六'];
+            const formatted = now.getFullYear() + '-' +
+                              String(now.getMonth() + 1).padStart(2, '0') + '-' +
+                              String(now.getDate()).padStart(2, '0') + '（' +
+                              days[now.getDay()] + '） ' +
+                              String(now.getHours()).padStart(2, '0') + ':' +
+                              String(now.getMinutes()).padStart(2, '0') + ':' +
+                              String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('clock').textContent = formatted;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // 從 Google Sheets 載入公告內容與跑馬燈內容（欄0是公告，欄1是跑馬燈）
+        fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vT4vzU7xZk5cwgUvNLxqjcDwn5ZnZ63o3XH8r5kK7oTvKQPSDjTezBWQbS-4wfyACro_-kCgJ1iNfFt/pub?output=csv')
+          .then(response => response.text())
+          .then(csvText => {
+            
+    const lines = csvText.trim().split('\n').map(row => {
+      // 基本處理每列，手動擷取 A/B 欄
+      let match = row.match(/^"(.*?)","?(.*?)"?$/);
+      return match ? [match[1], match[2]] : [row, ''];
+    });
+    
+            const container = document.getElementById('announcement-area');
+            container.innerHTML = '';
+            let marqueeText = "";
+            lines.forEach((line, index) => {
+              const columns = line;
+              const page = document.createElement('div');
+              page.className = 'page';
+              if (index === 0) page.classList.add('active');
+              page.textContent = columns[0] || "";  // 第一欄：公告內容
+              container.appendChild(page);
+              if (columns[1]) marqueeText += columns[1] + ' ✦ '; // 第二欄：跑馬燈
+            });
+
+            // 更新跑馬燈內容
+            if (document.getElementById('marquee-text')) {
+    document.getElementById('marquee-text').textContent = marqueeText.trim() || '　';
+}
+
+            const pages = document.querySelectorAll('.page');
+            let pageIndex = 0;
+            setInterval(() => {
+              pages[pageIndex].classList.remove('active');
+              pageIndex = (pageIndex + 1) % pages.length;
+              pages[pageIndex].classList.add('active');
+            }, 3000);
+          });
+        fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vT4vzU7xZk5cwgUvNLxqjcDwn5ZnZ63o3XH8r5kK7oTvKQPSDjTezBWQbS-4wfyACro_-kCgJ1iNfFt/pub?output=csv')
+          .then(response => response.text())
+          .then(csvText => {
+            
+    const lines = csvText.trim().split('\n').map(row => {
+      // 基本處理每列，手動擷取 A/B 欄
+      let match = row.match(/^"(.*?)","?(.*?)"?$/);
+      return match ? [match[1], match[2]] : [row, ''];
+    });
+    
+            const container = document.getElementById('announcement-area');
+            container.innerHTML = '';
+            lines.forEach((line, index) => {
+              const page = document.createElement('div');
+              page.className = 'page';
+              if (index === 0) page.classList.add('active');
+              page.textContent = line;
+              container.appendChild(page);
+            });
+
+            const pages = document.querySelectorAll('.page');
+            let pageIndex = 0;
+            setInterval(() => {
+              pages[pageIndex].classList.remove('active');
+              pageIndex = (pageIndex + 1) % pages.length;
+              pages[pageIndex].classList.add('active');
+            }, 3000);
+          });
+
+        // 輪播背景圖片
+        const bgImgs = document.querySelectorAll('.background img');
+        let bgIndex = 0;
+        setInterval(() => {
+            bgImgs[bgIndex].classList.remove('active');
+            bgIndex = (bgIndex + 1) % bgImgs.length;
+            bgImgs[bgIndex].classList.add('active');
+        }, 5000);
+    </script>
+</body>
+</html>
