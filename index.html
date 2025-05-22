@@ -213,8 +213,10 @@
         garbageDiv.style.display = "flex";
         allContent.forEach(el => el.style.display = "none");
         if (music && music.paused) {
-          music.play().catch(() => console.log("音樂播放被阻擋"));
-        }
+            music.muted = false;
+            music.play().catch(() => console.log("音樂播放被阻擋"));
+            }
+
       } else {
         garbageDiv.style.display = "none";
         allContent.forEach(el => el.style.display = "");
