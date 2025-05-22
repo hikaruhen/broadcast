@@ -123,7 +123,7 @@
         fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vT4vzU7xZk5cwgUvNLxqjcDwn5ZnZ63o3XH8r5kK7oTvKQPSDjTezBWQbS-4wfyACro_-kCgJ1iNfFt/pub?output=csv')
           .then(response => response.text())
           .then(csvText => {
-            const rows = csvText.trim().split('\n');
+            const rows = csvText.trim().split('\n').map(r => r.replace(/^\ufeff/, ''));
             const lines = rows.map(row => {
               const commaIndex = row.indexOf(",");
               if (commaIndex === -1) return [row, ""];
