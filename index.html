@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>班級無聲廣播系統</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: "Microsoft JhengHei", sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        .time {
+            font-size: 2em;
+            text-align: center;
+            padding: 10px;
+        }
+        .marquee {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: #222;
+            color: #ff0;
+            font-size: 1.5em;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .marquee-content {
+            display: inline-block;
+            padding-left: 100%;
+            animation: scroll-left 15s linear infinite;
+        }
+        @keyframes scroll-left {
+            from { transform: translateX(0%); }
+            to { transform: translateX(-100%); }
+        }
+        .content {
+            position: absolute;
+            top: 80px;
+            bottom: 50px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .page {
+            display: none;
+            font-size: 2em;
+            text-align: center;
+            padding: 20px;
+        }
+        .page.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="time" id="clock">載入中...</div>
+    <div class="content">
+        <div class="page active">📢 本週五舉辦期中考說明會</div>
+        <div class="page">🎉 祝同學生日快樂：李禹晴、施楀伭</div>
+        <div class="page">🚫 請勿飲食於教室內</div>
+        <div class="page">📚 早自習請準時交作業</div>
+    </div>
+    <div class="marquee">
+        <div class="marquee-content">【提醒】請保持安靜 ✦ 本週五期中考說明會 ✦ 遺失物請至學務處 ✦ 本週值日生：李、吳、張 ✦</div>
+    </div>
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const days = ['日', '一', '二', '三', '四', '五', '六'];
+            const formatted = now.getFullYear() + '-' +
+                              String(now.getMonth() + 1).padStart(2, '0') + '-' +
+                              String(now.getDate()).padStart(2, '0') + '（' +
+                              days[now.getDay()] + '） ' +
+                              String(now.getHours()).padStart(2, '0') + ':' +
+                              String(now.getMinutes()).padStart(2, '0') + ':' +
+                              String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('clock').textContent = formatted;
+        }
+
+        function rotatePages() {
+            const pages = document.querySelectorAll('.page');
+            let index = 0;
+            setInterval(() => {
+                pages[index].classList.remove('active');
+                index = (index + 1) % pages.length;
+                pages[index].classList.add('active');
+            }, 5000); // 每 5 秒切換一次頁面
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock();
+        rotatePages();
+    </script>
+</body>
+</html>
