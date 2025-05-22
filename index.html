@@ -127,7 +127,7 @@
             container.innerHTML = '';
             let marqueeText = "";
             lines.forEach((line, index) => {
-              const columns = line.split(',');
+              const columns = line.match(/(?:"([^"]*)"|[^,]*)/g).map(cell => cell.replace(/^"|"$/g, ''));
               const page = document.createElement('div');
               page.className = 'page';
               if (index === 0) page.classList.add('active');
