@@ -137,7 +137,9 @@
             });
 
             // 更新跑馬燈內容
-            document.getElementById('marquee-text').textContent = marqueeText || '　';
+            if (document.getElementById('marquee-text')) {
+    document.getElementById('marquee-text').textContent = marqueeText.trim() || '　';
+}
 
             const pages = document.querySelectorAll('.page');
             let pageIndex = 0;
