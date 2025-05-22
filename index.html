@@ -81,19 +81,30 @@
         <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be01.jpg" class="active">
         <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be02.jpg">
         <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be03.jpg">
+        <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be04.jpg">
+        <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be05.jpg">
+        <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be06.jpg">
+        <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be07.jpg">
+        <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be08.jpg">
+        <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be09.jpg">
     </div>
 
     <div class="time" id="clock">載入中...</div>
 
     <div class="content">
-        <div class="page active">📢 本週五舉辦期中考說明會</div>
-        <div class="page">🎉 祝同學生日快樂：李禹晴、施楀伭</div>
-        <div class="page">🚫 請勿飲食於教室內</div>
-        <div class="page">📚 早自習請準時交作業</div>
+        <div class="page active">📢 無聲廣播首頁</div>
+        <div class="page">🎉 祝本月壽星生日快樂：林沛潔、許立楷</div>
+        <div class="page">🙇 作業沒交：</div>
+        <div class="page">🙇‍♀️ 沒交聯絡簿：</div>
+        <div class="page">🍙 誰來午餐：</div>
+        <div class="page">💯 分數未登錄：</div>
+        <div class="page">🤖 掃地機器人：</div>
+        <div class="page">😭 每日簽到：</div>
+        <div class="page">📚 本日備忘：</div>
     </div>
 
     <div class="marquee">
-        <div class="marquee-content">【提醒】請保持安靜 ✦ 本週五期中考說明會 ✦ 遺失物請至學務處 ✦ 本週值日生：李、吳、張 ✦</div>
+        <div class="marquee-content">【提醒】上課中請保持安靜 ✦ YYY ✦ XXX ✦ 本日值日生：A、B、C、D ✦</div>
     </div>
 
     <script>
@@ -111,7 +122,7 @@
             document.getElementById('clock').textContent = formatted;
         }
 
-        setInterval(updateClock, 1000);
+        setInterval(updateClock, 10000);
         updateClock();
 
         // 公告輪播
@@ -121,7 +132,7 @@
             pages[pageIndex].classList.remove('active');
             pageIndex = (pageIndex + 1) % pages.length;
             pages[pageIndex].classList.add('active');
-        }, 5000);
+        }, 3000);
 
         // 背景輪播
         const bgImgs = document.querySelectorAll('.background img');
@@ -130,7 +141,7 @@
             bgImgs[bgIndex].classList.remove('active');
             bgIndex = (bgIndex + 1) % bgImgs.length;
             bgImgs[bgIndex].classList.add('active');
-        }, 10000); // 每 10 秒換背景
+        }, 5000); // 每 10 秒換背景
     </script>
 </body>
 </html>
