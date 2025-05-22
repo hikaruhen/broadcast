@@ -117,7 +117,7 @@
       <source src="https://dl.dropboxusercontent.com/scl/fi/9xj7ogdfabf1rbgy96ykk/prayer.mp3?rlkey=33dxm8aax3n6x1x8hj1q7wqwa&raw=1" type="audio/mpeg">
     </audio>
 <script>
-  // 預載靜音播放授權
+  // 提前播放授權（靜音預播）
   window.addEventListener("load", () => {
     const music = document.getElementById("garbage-music");
     if (music) {
@@ -125,7 +125,7 @@
         music.pause();
         music.currentTime = 0;
         console.log("🔊 播放授權已獲得");
-      }).catch(err => console.log("⚠️ 播放授權失敗，等待使用者互動"));  
+      }).catch(err => console.log("⚠️ 播放授權失敗，需使用者互動"));  
     }
   });
 </script>
