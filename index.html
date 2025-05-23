@@ -255,5 +255,14 @@
     <img src="cleaning_time.png" alt="清掃提醒" style="max-width:80%; height:auto;">
   </div>
 
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js')
+      .then(() => console.log("✅ Service worker registered"))
+      .catch(err => console.log("❌ SW registration failed:", err));
+  }
+</script>
+
 </body>
 </html>
