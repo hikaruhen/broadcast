@@ -2,7 +2,8 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <!-- head區塊：包含網頁的基本資訊與引入 manifest（PWA設定） -->
+  <link rel="icon" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
   <meta charset="UTF-8">
   <title>班級無聲廣播系統</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -96,8 +97,6 @@
   </style>
 </head>
 <body>
-  
-  <!-- 背景圖片容器，會自動輪播，圖片放在 <img> 裡，並透過 JS 定時切換 .active -->
   <div class="background">
     <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be01.jpg" class="active">
     <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be02.jpg">
@@ -110,24 +109,16 @@
     <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be09.jpg">
   </div>
 
-  
-  <!-- 顯示當前時間的區塊，內容由 JS 每秒更新 -->
   <div class="time" id="clock">載入中...</div>
 
-  
-  <!-- 廣播主要內容顯示區塊，會由 Google Sheets 取得內容並輪播 -->
   <div class="content" id="announcement-area">
     <div class="page active">📢 無聲廣播首頁</div>
   </div>
 
-  
-  <!-- 跑馬燈區塊，會從 Google Sheets B 欄載入資料並橫向滾動 -->
   <div class="marquee">
     <div class="marquee-content" id="marquee-text">載入中...</div>
   </div>
 
-  
-  <!-- 垃圾車模式區塊：在特定時間（12:20）顯示圖片並播放音樂 -->
   <div id="garbage-mode">
     <img src="gomidashi_woman.png" alt="垃圾車提醒">
     <audio id="garbage-music" loop>
@@ -163,17 +154,11 @@
     }
     setInterval(updateClock, 1000);
     // 自動每 5 分鐘刷新
-    
-    // 以下是主迴圈，每秒檢查時間是否進入垃圾車或清掃模式
-    
-    // 每 10 分鐘強制重新整理頁面，並加上 query string 避免快取
     setInterval(() => {
    location.href = location.pathname + '?t=' + new Date().getTime();
     }, 5 * 60 * 1000);
     updateClock();
 
-    
-    // 載入 Google Sheets 公開 csv 檔案，拆出每列的前後欄位
     fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vT4vzU7xZk5cwgUvNLxqjcDwn5ZnZ63o3XH8r5kK7oTvKQPSDjTezBWQbS-4wfyACro_-kCgJ1iNfFt/pub?output=csv')
       .then(response => response.text())
       .then(csvText => {
@@ -206,9 +191,7 @@
 
         const pages = document.querySelectorAll('.page');
         let pageIndex = 0;
-        
-    // 以下是主迴圈，每秒檢查時間是否進入垃圾車或清掃模式
-    setInterval(() => {
+        setInterval(() => {
           pages[pageIndex].classList.remove('active');
           pageIndex = (pageIndex + 1) % pages.length;
           pages[pageIndex].classList.add('active');
@@ -217,16 +200,12 @@
 
     const bgImgs = document.querySelectorAll('.background img');
     let bgIndex = 0;
-    
-    // 以下是主迴圈，每秒檢查時間是否進入垃圾車或清掃模式
     setInterval(() => {
       bgImgs[bgIndex].classList.remove('active');
       bgIndex = (bgIndex + 1) % bgImgs.length;
       bgImgs[bgIndex].classList.add('active');
     }, 5000);
 
-    
-    // 以下是主迴圈，每秒檢查時間是否進入垃圾車或清掃模式
     setInterval(() => {
       const now = new Date();
       const h = now.getHours();
@@ -272,9 +251,7 @@
     }, 1000);
   </script>
 
-  
-  <!-- 清掃模式區塊：在 14:51~15:05 顯示清掃圖片，不播放音樂 -->
-  <div id="cleaning-mode"  style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:black; z-index:998; justify-content:center; align-items:center;">
+  <div id="cleaning-mode" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:black; z-index:998; justify-content:center; align-items:center;">
     <img src="cleaning_time.png" alt="清掃提醒" style="max-width:80%; height:auto;">
   </div>
 
