@@ -161,7 +161,9 @@
   });
 </script>
 </div>
-<script>// 🔧 廣播系統主控制腳本（含顯示時間、跑馬燈、播放時間排程等）
+<script>
+let userForcedExit = false;
+// 🔧 廣播系統主控制腳本（含顯示時間、跑馬燈、播放時間排程等）
 
 // 🎵 播放音樂授權：點擊畫面一次以啟用音訊播放（瀏覽器限制）
 const music = document.getElementById("garbage-music");
@@ -173,7 +175,9 @@ authBtn.addEventListener("click", () => {
     console.log("🔊 播放授權成功");
     document.getElementById('sound-indicator').style.display = 'block';
     authBtn.remove(); // 移除透明按鈕
-  }).catch(err => {
+      }
+  } else {
+    userForcedExit = false;).catch(err => {
     console.log("⚠️ 播放授權失敗", err);
   });
 });
@@ -269,7 +273,7 @@ setInterval(() => {
       start: [14, 51],
       end: [15, 5],
       image: "school_chiritori_houki.png",
-      audio: "ShutUpAndDance.mp3"
+      audio: "prayer.mp3"
     }
   ];
 
@@ -292,13 +296,14 @@ setInterval(() => {
   }
 
   if (matched) {
-    garbageDiv.style.display = "flex";
-    allContent.forEach(el => el.style.display = "none");
-    garbageDiv.querySelector("img").src = matched.image;
+    if (!userForcedExit) {
+          garbageDiv.style.display = "flex";
+          allContent.forEach(el => el.style.display = "none");
+          garbageDiv.querySelector("img").src = matched.image;
     if (music.src.indexOf(matched.audio) === -1) {
       music.src = matched.audio;
     }
-    if (music.paused) {
+          if (music.paused) {
       music.muted = false;
       music.play().catch(() => console.log("音樂播放被阻擋"));
     }
@@ -320,6 +325,7 @@ document.addEventListener("click", () => {
   const allContent = document.body.querySelectorAll("body > *:not(#garbage-mode):not(.persistent-ui)");
 
   if (garbageDiv.style.display === "flex") {
+    userForcedExit = true;
     garbageDiv.style.display = "none";
     allContent.forEach(el => el.style.display = "");
     if (!music.paused) {
