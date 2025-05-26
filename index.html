@@ -311,6 +311,24 @@ setInterval(() => {
     }
   }
 }, 1000);
+
+
+/* 🖱️ 使用者點一下畫面即提前退出播放狀態 */
+document.addEventListener("click", () => {
+  const garbageDiv = document.getElementById("garbage-mode");
+  const music = document.getElementById("garbage-music");
+  const allContent = document.body.querySelectorAll("body > *:not(#garbage-mode):not(.persistent-ui)");
+
+  if (garbageDiv.style.display === "flex") {
+    garbageDiv.style.display = "none";
+    allContent.forEach(el => el.style.display = "");
+    if (!music.paused) {
+      music.pause();
+      music.currentTime = 0;
+    }
+    console.log("🚪 使用者點擊，已退出播放模式");
+  }
+});
 </script>
 <div id="cleaning-mode" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:black; z-index:998; justify-content:center; align-items:center;">
 <img alt="清掃提醒" src="cleaning_time.png" style="max-width:80%; height:auto;"/>
