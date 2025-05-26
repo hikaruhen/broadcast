@@ -147,19 +147,7 @@
 <audio id="garbage-music" loop="">
 <source src="prayer.mp3" type="audio/mpeg"/>
 </audio>
-<script>
-  // 提前播放授權（靜音預播）
-  window.addEventListener("load", () => {
-    const music = document.getElementById("garbage-music");
-    if (music) {
-      music.play().then(() => {
-        music.pause();
-        music.currentTime = 0;
-        console.log("🔊 播放授權已獲得");
-      }).catch(err => console.log("⚠️ 播放授權失敗，需使用者互動"));  
-    }
-  });
-</script>
+
 </div>
 <script>
 // 🏁 使用者點擊退出播放畫面用的旗標
@@ -265,5 +253,17 @@ document.addEventListener("click", () => {
       .catch(err => console.log("❌ SW registration failed:", err));
   }
 </script>
-</body>
+<script>
+  // 提前播放授權（靜音預播）
+  window.addEventListener("load", () => {
+    const music = document.getElementById("garbage-music");
+    if (music) {
+      music.play().then(() => {
+        music.pause();
+        music.currentTime = 0;
+        console.log("🔊 播放授權已獲得");
+      }).catch(err => console.log("⚠️ 播放授權失敗，需使用者互動"));  
+    }
+  });
+</script></body>
 </html>
