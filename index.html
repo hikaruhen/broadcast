@@ -283,6 +283,8 @@ authBtn.addEventListener("click", () => {
       const cleaningDiv = document.getElementById("cleaning-mode");
 
       if (isCleaningTime && !userExitPlayback) {
+  cleaningDiv.style.display = "flex";
+  allContent.forEach(el => el.style.display = "none");
         cleaningDiv.style.display = "flex";
         if (!garbageDiv || garbageDiv.style.display !== "flex") {
           allContent.forEach(el => el.style.display = "none");
