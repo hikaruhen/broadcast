@@ -149,27 +149,107 @@
 </audio>
 
 </div>
-<script>
-// 🏁 使用者點擊退出播放畫面用的旗標
-let userForcedExit = false;
+<script>// 🔧 廣播系統主控制腳本（含顯示時間、跑馬燈、播放時間排程等）
 
-// 🧼 初始化播放畫面預設隱藏
-window.addEventListener("load", () => {
-  const garbageDiv = document.getElementById("garbage-mode");
-  if (garbageDiv) garbageDiv.style.display = "none";
+// 🎵 播放音樂授權：點擊畫面一次以啟用音訊播放（瀏覽器限制）
+const music = document.getElementById("garbage-music");
+const authBtn = document.getElementById("sound-auth-btn");
+authBtn.addEventListener("click", () => {
+  music.play().then(() => {
+    music.pause();
+    music.currentTime = 0;
+    console.log("🔊 播放授權成功");
+    document.getElementById('sound-indicator').style.display = 'block';
+    authBtn.remove(); // 移除透明按鈕
+  }).catch(err => {
+    console.log("⚠️ 播放授權失敗", err);
+  });
 });
 
-// ⏱ 播放時段檢查與播放控制
+// 🕒 顯示時間（每秒更新一次）
+function updateClock() {
+  const now = new Date();
+  const days = ['日', '一', '二', '三', '四', '五', '六'];
+  const formatted = now.getFullYear() + '-' +
+                    String(now.getMonth() + 1).padStart(2, '0') + '-' +
+                    String(now.getDate()).padStart(2, '0') + '（' +
+                    days[now.getDay()] + '） ' +
+                    String(now.getHours()).padStart(2, '0') + ':' +
+                    String(now.getMinutes()).padStart(2, '0') + ':' +
+                    String(now.getSeconds()).padStart(2, '0');
+  document.getElementById('clock').textContent = formatted;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// 🔁 自動每 20 分鐘刷新頁面（使用 reload 保留 session）
+setInterval(() => {
+  location.reload();
+}, 20 * 60 * 1000);
+
+// 📄 從 Google Sheets 讀取公告與跑馬燈文字
+fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vT4vzU7xZk5cwgUvNLxqjcDwn5ZnZ63o3XH8r5kK7oTvKQPSDjTezBWQbS-4wfyACro_-kCgJ1iNfFt/pub?output=csv')
+  .then(response => response.text())
+  .then(csvText => {
+    const rows = csvText.trim().split('\n').map(row => row.replace(/^\ufeff/, ''));
+    const lines = rows.map(row => {
+      const commaIndex = row.indexOf(",");
+      if (commaIndex === -1) return [row, ""];
+      return [row.slice(0, commaIndex).trim(), row.slice(commaIndex + 1).trim()];
+    });
+
+    // 🧾 公告顯示區塊處理
+    const container = document.getElementById('announcement-area');
+    container.innerHTML = '';
+    let marqueeParts = [];
+
+    lines.forEach((columns, index) => {
+      const page = document.createElement('div');
+      page.className = 'page';
+      if (index === 0) page.classList.add('active');
+      page.textContent = columns[0];
+      container.appendChild(page);
+      if (columns[1]) {
+        marqueeParts.push(columns[1]);
+      }
+    });
+
+    // 🎞️ 跑馬燈文字
+    const marquee = document.getElementById('marquee-text');
+    if (marquee) {
+      marquee.textContent = marqueeParts.join(' ✦ ') || '　';
+    }
+
+    // 📃 輪播公告頁面（3 秒切換）
+    const pages = document.querySelectorAll('.page');
+    let pageIndex = 0;
+    setInterval(() => {
+      pages[pageIndex].classList.remove('active');
+      pageIndex = (pageIndex + 1) % pages.length;
+      pages[pageIndex].classList.add('active');
+    }, 3000);
+  });
+
+// 🖼️ 背景圖片輪播（每 5 秒切換一張）
+const bgImgs = document.querySelectorAll('.background img');
+let bgIndex = 0;
+setInterval(() => {
+  bgImgs[bgIndex].classList.remove('active');
+  bgIndex = (bgIndex + 1) % bgImgs.length;
+  bgImgs[bgIndex].classList.add('active');
+}, 5000);
+
+// 🕰️ 特定時間播放圖片與音樂（支援多段）
 setInterval(() => {
   const now = new Date();
   const h = now.getHours();
   const m = now.getMinutes();
-  const nowVal = h * 60 + m;
 
+  // 🗓️ 播放時間表：可依需求新增更多段落
   const schedule = [
     {
-      start: [12, 20],
-      end: [12, 21],
+      start: [12, 20], // 12:20 開始
+      end: [12, 21],   // 12:21 結束
       image: "gomidashi_woman.png",
       audio: "prayer.mp3"
     },
@@ -189,10 +269,10 @@ setInterval(() => {
   for (const entry of schedule) {
     const [sh, sm] = entry.start;
     const [eh, em] = entry.end;
+    const nowVal = h * 60 + m;
     const startVal = sh * 60 + sm;
     const endVal = eh * 60 + em;
 
-    // 🧠 播放條件：正常時間段或跨日處理
     if (
       (startVal <= endVal && nowVal >= startVal && nowVal < endVal) ||
       (startVal > endVal && (nowVal >= startVal || nowVal < endVal))
@@ -202,7 +282,7 @@ setInterval(() => {
     }
   }
 
-  if (matched && !userForcedExit) {
+  if (matched) {
     garbageDiv.style.display = "flex";
     allContent.forEach(el => el.style.display = "none");
     garbageDiv.querySelector("img").src = matched.image;
@@ -213,8 +293,7 @@ setInterval(() => {
       music.muted = false;
       music.play().catch(() => console.log("音樂播放被阻擋"));
     }
-  } else if (!matched) {
-    userForcedExit = false;
+  } else {
     garbageDiv.style.display = "none";
     allContent.forEach(el => el.style.display = "");
     if (!music.paused) {
@@ -222,26 +301,7 @@ setInterval(() => {
       music.currentTime = 0;
     }
   }
-
 }, 1000);
-
-// 🖱️ 點擊畫面可退出播放模式並不再重播
-document.addEventListener("click", () => {
-  const garbageDiv = document.getElementById("garbage-mode");
-  const music = document.getElementById("garbage-music");
-  const allContent = document.body.querySelectorAll("body > *:not(#garbage-mode):not(.persistent-ui)");
-
-  if (garbageDiv.style.display === "flex") {
-    userForcedExit = true;
-    garbageDiv.style.display = "none";
-    allContent.forEach(el => el.style.display = "");
-    if (!music.paused) {
-      music.pause();
-      music.currentTime = 0;
-    }
-    console.log("🚪 使用者點擊退出播放模式");
-  }
-});
 </script>
 <div id="cleaning-mode" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:black; z-index:998; justify-content:center; align-items:center;">
 <img alt="清掃提醒" src="cleaning_time.png" style="max-width:80%; height:auto;"/>
