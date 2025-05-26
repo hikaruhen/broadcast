@@ -142,12 +142,24 @@
 <div class="marquee">
 <div class="marquee-content" id="marquee-text">載入中...</div>
 </div>
-<div id="garbage-mode" style="display: none;">
+<div id="garbage-mode">
 <img alt="垃圾車提醒" src="gomidashi_woman.png"/>
 <audio id="garbage-music" loop="">
 <source src="prayer.mp3" type="audio/mpeg"/>
 </audio>
-
+<script>
+  // 提前播放授權（靜音預播）
+  window.addEventListener("load", () => {
+    const music = document.getElementById("garbage-music");
+    if (music) {
+      music.play().then(() => {
+        music.pause();
+        music.currentTime = 0;
+        console.log("🔊 播放授權已獲得");
+      }).catch(err => console.log("⚠️ 播放授權失敗，需使用者互動"));  
+    }
+  });
+</script>
 </div>
 <script>// 🔧 廣播系統主控制腳本（含顯示時間、跑馬燈、播放時間排程等）
 
@@ -273,10 +285,7 @@ setInterval(() => {
     const startVal = sh * 60 + sm;
     const endVal = eh * 60 + em;
 
-    if (
-      (startVal <= endVal && nowVal >= startVal && nowVal < endVal) ||
-      (startVal > endVal && (nowVal >= startVal || nowVal < endVal))
-    ) {
+    if (nowVal >= startVal && nowVal < endVal) {
       matched = entry;
       break;
     }
@@ -313,17 +322,5 @@ setInterval(() => {
       .catch(err => console.log("❌ SW registration failed:", err));
   }
 </script>
-<script>
-  // 提前播放授權（靜音預播）
-  window.addEventListener("load", () => {
-    const music = document.getElementById("garbage-music");
-    if (music) {
-      music.play().then(() => {
-        music.pause();
-        music.currentTime = 0;
-        console.log("🔊 播放授權已獲得");
-      }).catch(err => console.log("⚠️ 播放授權失敗，需使用者互動"));  
-    }
-  });
-</script></body>
+</body>
 </html>
