@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -39,7 +38,6 @@
 <div class="marquee"><div class="marquee-content" id="marquee-text">載入中...</div></div>
 <div id="garbage-mode"><img src="gomidashi_woman.png"/><audio id="garbage-music" loop><source src="prayer.mp3" type="audio/mpeg"/></audio></div>
 <div id="cleaning-mode"><img src="cleaning_time.png" /></div>
-
 <script>
 let userExitPlayback = false;
 document.addEventListener("click", () => {
@@ -74,8 +72,6 @@ function updateClock() {
 setInterval(updateClock, 1000);
 setInterval(() => { location.reload(); }, 20 * 60 * 1000);
 updateClock();
-
-// 撥放主邏輯
 setInterval(() => {
   const now = new Date(); const h = now.getHours(); const m = now.getMinutes();
   const isCleaningTime = (h === 14 && m >= 51) || (h === 15 && m <= 5);
@@ -83,7 +79,6 @@ setInterval(() => {
   const garbageDiv = document.getElementById("garbage-mode");
   const cleaningDiv = document.getElementById("cleaning-mode");
   const allContent = document.body.querySelectorAll("body > *:not(#garbage-mode):not(.persistent-ui):not(#cleaning-mode)");
-
   if (isGarbageTime && !userExitPlayback) {
     garbageDiv.style.display = "flex";
     allContent.forEach(el => el.style.display = "none");
@@ -94,16 +89,11 @@ setInterval(() => {
     allContent.forEach(el => el.style.display = "");
     if (music && !music.paused) { music.pause(); music.currentTime = 0; }
   }
-
   if (isCleaningTime && !userExitPlayback) {
     console.log("🧹 清掃時間觸發", h + ":" + m);
     cleaningDiv.style.display = "flex";
     if (!garbageDiv || garbageDiv.style.display !== "flex") {
       allContent.forEach(el => el.style.display = "none");
-    }
-    if (music && music.paused) {
-      music.muted = false;
-      music.play().catch(() => console.log("音樂播放被阻擋（清掃）"));
     }
   } else {
     cleaningDiv.style.display = "none";
@@ -113,48 +103,6 @@ setInterval(() => {
     }
   }
 }, 1000);
-
-// fetch 試算表
-fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vT4vzU7xZk5cwgUvNLxqjcDwn5ZnZ63o3XH8r5kK7oTvKQPSDjTezBWQbS-4wfyACro_-kCgJ1iNfFt/pub?output=csv')
-  .then(response => response.text())
-  .then(csvText => {
-    console.log("✅ 成功取得 CSV 資料：", csvText);
-    const rows = csvText.trim().split('\n').map(row => row.replace(/^\ufeff/, ''));
-    const lines = rows.map(row => {
-      const commaIndex = row.indexOf(",");
-      if (commaIndex === -1) return [row, ""];
-      return [row.slice(0, commaIndex).trim(), row.slice(commaIndex + 1).trim()];
-    });
-
-    const container = document.getElementById('announcement-area');
-    container.innerHTML = '';
-    let marqueeParts = [];
-
-    lines.forEach((columns, index) => {
-      const page = document.createElement('div');
-      page.className = 'page';
-      if (index === 0) page.classList.add('active');
-      page.textContent = columns[0];
-      container.appendChild(page);
-      if (columns[1]) {
-        marqueeParts.push(columns[1]);
-      }
-    });
-
-    const marquee = document.getElementById('marquee-text');
-    if (marquee) {
-      marquee.textContent = marqueeParts.join(' ✦ ') || '　';
-    }
-
-    const pages = document.querySelectorAll('.page');
-    let pageIndex = 0;
-    setInterval(() => {
-      pages[pageIndex].classList.remove('active');
-      pageIndex = (pageIndex + 1) % pages.length;
-      pages[pageIndex].classList.add('active');
-    }, 3000);
-  })
-  .catch(err => console.log("❌ 無法讀取試算表資料：", err));
 </script>
 </body>
 </html>
