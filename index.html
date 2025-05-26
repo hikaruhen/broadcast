@@ -95,8 +95,7 @@
       max-width: 80%;
       height: auto;
     }
-  
-#sound-indicator { position:fixed; bottom:10px; left:10px; z-index:5000; opacity:0.5; width:40px; height:40px; display:none; }</style>
+  </style>
 </head>
 <body><button id="sound-auth-btn" style="position:fixed; top:0; left:0; width:100vw; height:100vh; opacity:0; z-index:10000;">點一下以啟用音效</button>
 <div class="background">
@@ -145,7 +144,7 @@ authBtn.addEventListener("click", () => {
     music.pause();
     music.currentTime = 0;
     console.log("🔊 播放授權成功");
-    document.getElementById('sound-indicator').style.display = 'block'; authBtn.remove();
+    authBtn.remove();
   }).catch(err => {
     console.log("⚠️ 播放授權失敗", err);
   });
@@ -272,5 +271,5 @@ authBtn.addEventListener("click", () => {
       .catch(err => console.log("❌ SW registration failed:", err));
   }
 </script>
-<img id="sound-indicator" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Speaker_Icon.svg/512px-Speaker_Icon.svg.png"/></body>
+</body>
 </html>
