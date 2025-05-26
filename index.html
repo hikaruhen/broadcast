@@ -137,9 +137,8 @@
 <script>
   // 提前播放授權（靜音預播）
   window.addEventListener("load", () => {
-    let userExitPlayback = false;
-let hasTriggeredCleaning = false;
-let cleaningDismissed = false;
+    let cleaningMode = false;
+let userClosedCleaning = false;
 
 document.addEventListener("click", () => {
   const garbageDiv = document.getElementById("garbage-mode");
@@ -149,14 +148,9 @@ document.addEventListener("click", () => {
 
   if (garbageDiv.style.display === "flex" || cleaningDiv.style.display === "flex") {
     userExitPlayback = true;
-    cleaningDismissed = true;
     garbageDiv.style.display = "none";
     cleaningDiv.style.display = "none";
-    if (!isCleaningTime && !isGarbageTime) {
-  userExitPlayback = false;
-  cleaningDismissed = false;
-  hasTriggeredCleaning = false;
-}
+    if (!isCleaningTime && !isGarbageTime) userExitPlayback = false;
     allContent.forEach(el => el.style.display = "");
     if (!music.paused) {
       music.pause();
@@ -178,9 +172,8 @@ const music = document.getElementById("garbage-music");
 </script>
 </div>
 <script>
-let userExitPlayback = false;
-let hasTriggeredCleaning = false;
-let cleaningDismissed = false;
+let cleaningMode = false;
+let userClosedCleaning = false;
 
 document.addEventListener("click", () => {
   const garbageDiv = document.getElementById("garbage-mode");
@@ -190,14 +183,9 @@ document.addEventListener("click", () => {
 
   if (garbageDiv.style.display === "flex" || cleaningDiv.style.display === "flex") {
     userExitPlayback = true;
-    cleaningDismissed = true;
     garbageDiv.style.display = "none";
     cleaningDiv.style.display = "none";
-    if (!isCleaningTime && !isGarbageTime) {
-  userExitPlayback = false;
-  cleaningDismissed = false;
-  hasTriggeredCleaning = false;
-}
+    if (!isCleaningTime && !isGarbageTime) userExitPlayback = false;
     allContent.forEach(el => el.style.display = "");
     if (!music.paused) {
       music.pause();
@@ -294,9 +282,8 @@ authBtn.addEventListener("click", () => {
       const m = now.getMinutes();
       const isGarbageTime = h === 12 && m === 20;
       const garbageDiv = document.getElementById("garbage-mode");
-      let userExitPlayback = false;
-let hasTriggeredCleaning = false;
-let cleaningDismissed = false;
+      let cleaningMode = false;
+let userClosedCleaning = false;
 
 document.addEventListener("click", () => {
   const garbageDiv = document.getElementById("garbage-mode");
@@ -306,14 +293,9 @@ document.addEventListener("click", () => {
 
   if (garbageDiv.style.display === "flex" || cleaningDiv.style.display === "flex") {
     userExitPlayback = true;
-    cleaningDismissed = true;
     garbageDiv.style.display = "none";
     cleaningDiv.style.display = "none";
-    if (!isCleaningTime && !isGarbageTime) {
-  userExitPlayback = false;
-  cleaningDismissed = false;
-  hasTriggeredCleaning = false;
-}
+    if (!isCleaningTime && !isGarbageTime) userExitPlayback = false;
     allContent.forEach(el => el.style.display = "");
     if (!music.paused) {
       music.pause();
@@ -360,11 +342,7 @@ const music = document.getElementById("garbage-music");
         }
       } else {
         cleaningDiv.style.display = "none";
-    if (!isCleaningTime && !isGarbageTime) {
-  userExitPlayback = false;
-  cleaningDismissed = false;
-  hasTriggeredCleaning = false;
-}
+    if (!isCleaningTime && !isGarbageTime) userExitPlayback = false;
         if (!garbageDiv || garbageDiv.style.display !== "flex") {
           allContent.forEach(el => el.style.display = "");
         }
