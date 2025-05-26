@@ -138,6 +138,7 @@
   // 提前播放授權（靜音預播）
   window.addEventListener("load", () => {
     let userExitPlayback = false;
+let isPlayingCleaning = false;
 
 document.addEventListener("click", () => {
   const garbageDiv = document.getElementById("garbage-mode");
@@ -147,8 +148,16 @@ document.addEventListener("click", () => {
 
   if (garbageDiv.style.display === "flex" || cleaningDiv.style.display === "flex") {
     userExitPlayback = true;
+    isPlayingCleaning = false;
     garbageDiv.style.display = "none";
     cleaningDiv.style.display = "none";
+    if (isPlayingCleaning) {
+      isPlayingCleaning = false;
+      if (!music.paused) {
+        music.pause();
+        music.currentTime = 0;
+      }
+    }
     if (!isCleaningTime && !isGarbageTime) userExitPlayback = false;
     allContent.forEach(el => el.style.display = "");
     if (!music.paused) {
@@ -172,6 +181,7 @@ const music = document.getElementById("garbage-music");
 </div>
 <script>
 let userExitPlayback = false;
+let isPlayingCleaning = false;
 
 document.addEventListener("click", () => {
   const garbageDiv = document.getElementById("garbage-mode");
@@ -181,8 +191,16 @@ document.addEventListener("click", () => {
 
   if (garbageDiv.style.display === "flex" || cleaningDiv.style.display === "flex") {
     userExitPlayback = true;
+    isPlayingCleaning = false;
     garbageDiv.style.display = "none";
     cleaningDiv.style.display = "none";
+    if (isPlayingCleaning) {
+      isPlayingCleaning = false;
+      if (!music.paused) {
+        music.pause();
+        music.currentTime = 0;
+      }
+    }
     if (!isCleaningTime && !isGarbageTime) userExitPlayback = false;
     allContent.forEach(el => el.style.display = "");
     if (!music.paused) {
@@ -281,6 +299,7 @@ authBtn.addEventListener("click", () => {
       const isGarbageTime = h === 12 && m === 20;
       const garbageDiv = document.getElementById("garbage-mode");
       let userExitPlayback = false;
+let isPlayingCleaning = false;
 
 document.addEventListener("click", () => {
   const garbageDiv = document.getElementById("garbage-mode");
@@ -290,8 +309,16 @@ document.addEventListener("click", () => {
 
   if (garbageDiv.style.display === "flex" || cleaningDiv.style.display === "flex") {
     userExitPlayback = true;
+    isPlayingCleaning = false;
     garbageDiv.style.display = "none";
     cleaningDiv.style.display = "none";
+    if (isPlayingCleaning) {
+      isPlayingCleaning = false;
+      if (!music.paused) {
+        music.pause();
+        music.currentTime = 0;
+      }
+    }
     if (!isCleaningTime && !isGarbageTime) userExitPlayback = false;
     allContent.forEach(el => el.style.display = "");
     if (!music.paused) {
@@ -327,6 +354,17 @@ const music = document.getElementById("garbage-music");
       const cleaningDiv = document.getElementById("cleaning-mode");
 
       if (isCleaningTime && !userExitPlayback) {
+      if (!isPlayingCleaning) {
+        cleaningDiv.style.display = "flex";
+        allContent.forEach(el => el.style.display = "none");
+        if (music && music.paused) {
+          music.muted = false;
+          music.play().then(() => {
+            isPlayingCleaning = true;
+          }).catch(() => console.log("音樂播放被阻擋（清掃）"));
+        }
+      }
+
         const music = document.getElementById("garbage-music");
         if (music && music.paused) {
           music.muted = false;
@@ -339,6 +377,13 @@ const music = document.getElementById("garbage-music");
         }
       } else {
         cleaningDiv.style.display = "none";
+    if (isPlayingCleaning) {
+      isPlayingCleaning = false;
+      if (!music.paused) {
+        music.pause();
+        music.currentTime = 0;
+      }
+    }
     if (!isCleaningTime && !isGarbageTime) userExitPlayback = false;
         if (!garbageDiv || garbageDiv.style.display !== "flex") {
           allContent.forEach(el => el.style.display = "");
