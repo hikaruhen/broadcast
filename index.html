@@ -3,7 +3,7 @@
 <html lang="zh-TW">
 <head>
   <meta charset="utf-8" />
-  <title>班級無聲廣播系統 v7</title>
+  <title>班級無聲廣播系統 v8</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body { margin: 0; font-family: "Microsoft JhengHei"; overflow: hidden; color: #fff; background: black; }
@@ -30,6 +30,8 @@
 
 <script>
 let cleaningMode = false;
+let userClosedCleaning = false;
+let audioPlaying = false;
 
 function updateClock() {
   const now = new Date();
@@ -38,10 +40,14 @@ function updateClock() {
 
   const isCleaningTime = (h === 14 && m >= 51) || (h === 15 && m <= 5);
 
-  if (isCleaningTime && !cleaningMode) {
+  if (isCleaningTime && !cleaningMode && !userClosedCleaning) {
     startCleaning();
   } else if (!isCleaningTime && cleaningMode) {
     stopCleaning();
+  }
+
+  if (!isCleaningTime) {
+    userClosedCleaning = false;
   }
 }
 
@@ -50,13 +56,18 @@ function startCleaning() {
   const div = document.getElementById("cleaning-mode");
   div.style.display = "flex";
   const audio = document.getElementById("cleaning-audio");
-  audio.muted = false;
-  audio.play().catch(() => console.log("🔇 音樂播放被瀏覽器阻擋"));
+  if (!audioPlaying) {
+    audio.muted = false;
+    audio.play().then(() => {
+      audioPlaying = true;
+    }).catch(() => console.log("音樂播放被瀏覽器阻擋"));
+  }
   console.log("✅ 清掃開始");
 }
 
 function stopCleaning() {
   cleaningMode = false;
+  audioPlaying = false;
   const div = document.getElementById("cleaning-mode");
   div.style.display = "none";
   const audio = document.getElementById("cleaning-audio");
@@ -66,7 +77,10 @@ function stopCleaning() {
 }
 
 document.addEventListener("click", () => {
-  if (cleaningMode) stopCleaning();
+  if (cleaningMode) {
+    userClosedCleaning = true;
+    stopCleaning();
+  }
 });
 
 setInterval(updateClock, 1000);
