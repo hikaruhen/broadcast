@@ -162,6 +162,13 @@
 </script>
 </div>
 <script>
+// 🧼 初始化播放畫面隱藏狀態，避免一進入頁面就顯示播放畫面
+window.addEventListener("load", () => {
+  const garbageDiv = document.getElementById("garbage-mode");
+  if (garbageDiv) garbageDiv.style.display = "none";
+});
+
+
 // 🏁 宣告使用者是否強制退出播放區段
 let userForcedExit = false;
 
@@ -183,7 +190,7 @@ setInterval(() => {
       start: [14, 51],
       end:   [15, 5],
       image: "school_chiritori_houki.png",
-      audio: "ShutUpAndDance.mp3"
+      audio: "prayer.mp3"
     }
   ];
 
