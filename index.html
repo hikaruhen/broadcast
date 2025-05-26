@@ -162,35 +162,34 @@
 </script>
 </div>
 <script>
-// 🧼 初始化播放畫面隱藏狀態，避免一進入頁面就顯示播放畫面
+// 🏁 使用者點擊退出播放畫面用的旗標
+let userForcedExit = false;
+
+// 🧼 初始化播放畫面預設隱藏
 window.addEventListener("load", () => {
   const garbageDiv = document.getElementById("garbage-mode");
   if (garbageDiv) garbageDiv.style.display = "none";
 });
 
-
-// 🏁 宣告使用者是否強制退出播放區段
-let userForcedExit = false;
-
-// 📆 每秒檢查是否進入排程時間
+// ⏱ 播放時段檢查與播放控制
 setInterval(() => {
   const now = new Date();
   const h = now.getHours();
   const m = now.getMinutes();
+  const nowVal = h * 60 + m;
 
-  // ⏰ 設定播放時段與內容
   const schedule = [
     {
       start: [12, 20],
-      end:   [12, 21],
+      end: [12, 21],
       image: "gomidashi_woman.png",
       audio: "prayer.mp3"
     },
     {
       start: [14, 51],
-      end:   [15, 5],
+      end: [15, 5],
       image: "school_chiritori_houki.png",
-      audio: "ShutUpAndDance.mp3"
+      audio: "prayer.mp3"
     }
   ];
 
@@ -202,10 +201,14 @@ setInterval(() => {
   for (const entry of schedule) {
     const [sh, sm] = entry.start;
     const [eh, em] = entry.end;
-    const nowVal = h * 60 + m;
     const startVal = sh * 60 + sm;
     const endVal = eh * 60 + em;
-    if (nowVal >= startVal && nowVal < endVal) {
+
+    // 🧠 播放條件：正常時間段或跨日處理
+    if (
+      (startVal <= endVal && nowVal >= startVal && nowVal < endVal) ||
+      (startVal > endVal && (nowVal >= startVal || nowVal < endVal))
+    ) {
       matched = entry;
       break;
     }
@@ -223,7 +226,6 @@ setInterval(() => {
       music.play().catch(() => console.log("音樂播放被阻擋"));
     }
   } else if (!matched) {
-    // 時間段結束，重設強制退出狀態
     userForcedExit = false;
     garbageDiv.style.display = "none";
     allContent.forEach(el => el.style.display = "");
@@ -235,7 +237,7 @@ setInterval(() => {
 
 }, 1000);
 
-// 🖱️ 點擊畫面提早結束播放狀態
+// 🖱️ 點擊畫面可退出播放模式並不再重播
 document.addEventListener("click", () => {
   const garbageDiv = document.getElementById("garbage-mode");
   const music = document.getElementById("garbage-music");
