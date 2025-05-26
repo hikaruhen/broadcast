@@ -110,7 +110,7 @@
 }
 </style>
 </head>
-<body><img id="sound-indicator" src="sound-icon.png"/><button id="sound-auth-btn" style="position:fixed; top:0; left:0; width:100vw; height:100vh; opacity:0; z-index:10000;">點一下以啟用音效</button>
+<body><img class="persistent-ui" id="sound-indicator" src="sound-icon.png"/><button id="sound-auth-btn" style="position:fixed; top:0; left:0; width:100vw; height:100vh; opacity:0; z-index:10000;">點一下以啟用音效</button>
 <div class="background">
 <img class="active" src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be01.jpg"/>
 <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be02.jpg"/>
@@ -237,7 +237,7 @@ authBtn.addEventListener("click", () => {
       const isGarbageTime = h === 12 && m === 20;
       const garbageDiv = document.getElementById("garbage-mode");
       const music = document.getElementById("garbage-music");
-      const allContent = document.body.querySelectorAll("body > *:not(#garbage-mode):not(#cleaning-mode)");
+      const allContent = document.body.querySelectorAll("body > *:not(#garbage-mode):not(.persistent-ui):not(#cleaning-mode)");
 
       if (isGarbageTime) {
         garbageDiv.style.display = "flex";
