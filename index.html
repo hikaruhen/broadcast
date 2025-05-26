@@ -1,13 +1,14 @@
 
 <!DOCTYPE html>
+
 <html lang="zh-TW">
 <head>
-  <link rel="icon" href="icon-192.png">
-  <link rel="apple-touch-icon" href="icon-192.png">
-  <meta charset="UTF-8">
-  <title>班級無聲廣播系統</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
+<link href="icon-192.png" rel="icon"/>
+<link href="icon-192.png" rel="apple-touch-icon"/>
+<meta charset="utf-8"/>
+<title>班級無聲廣播系統</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<style>
     body {
       margin: 0;
       padding: 0;
@@ -96,34 +97,30 @@
     }
   </style>
 </head>
-<body>
-  <div class="background">
-    <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be01.jpg" class="active">
-    <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be02.jpg">
-    <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be03.jpg">
-    <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be04.jpg">
-    <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be05.jpg">
-    <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be06.jpg">
-    <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be07.jpg">
-    <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be08.jpg">
-    <img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be09.jpg">
-  </div>
-
-  <div class="time" id="clock">載入中...</div>
-
-  <div class="content" id="announcement-area">
-    <div class="page active">📢 無聲廣播首頁</div>
-  </div>
-
-  <div class="marquee">
-    <div class="marquee-content" id="marquee-text">載入中...</div>
-  </div>
-
-  <div id="garbage-mode">
-    <img src="gomidashi_woman.png" alt="垃圾車提醒">
-    <audio id="garbage-music" loop>
-      <source src="prayer.mp3" type="audio/mpeg">
-    </audio>
+<body><button id="sound-auth-btn" style="position:fixed; top:0; left:0; width:100vw; height:100vh; opacity:0; z-index:10000;">點一下以啟用音效</button>
+<div class="background">
+<img class="active" src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be01.jpg"/>
+<img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be02.jpg"/>
+<img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be03.jpg"/>
+<img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be04.jpg"/>
+<img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be05.jpg"/>
+<img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be06.jpg"/>
+<img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be07.jpg"/>
+<img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be08.jpg"/>
+<img src="https://raw.githubusercontent.com/hikaruhen/broadcast/main/be09.jpg"/>
+</div>
+<div class="time" id="clock">載入中...</div>
+<div class="content" id="announcement-area">
+<div class="page active">📢 無聲廣播首頁</div>
+</div>
+<div class="marquee">
+<div class="marquee-content" id="marquee-text">載入中...</div>
+</div>
+<div id="garbage-mode">
+<img alt="垃圾車提醒" src="gomidashi_woman.png"/>
+<audio id="garbage-music" loop="">
+<source src="prayer.mp3" type="audio/mpeg"/>
+</audio>
 <script>
   // 提前播放授權（靜音預播）
   window.addEventListener("load", () => {
@@ -137,9 +134,23 @@
     }
   });
 </script>
-  </div>
+</div>
+<script>
+const music = document.getElementById("garbage-music");
+const authBtn = document.getElementById("sound-auth-btn");
 
-  <script>
+authBtn.addEventListener("click", () => {
+  music.play().then(() => {
+    music.pause();
+    music.currentTime = 0;
+    console.log("🔊 播放授權成功");
+    authBtn.remove();
+  }).catch(err => {
+    console.log("⚠️ 播放授權失敗", err);
+  });
+});
+
+
     function updateClock() {
       const now = new Date();
       const days = ['日', '一', '二', '三', '四', '五', '六'];
@@ -155,7 +166,7 @@
     setInterval(updateClock, 1000);
     // 自動每 20 分鐘刷新
     setInterval(() => {
-   location.href = location.pathname + '?t=' + new Date().getTime();
+   location.reload();
     }, 20 * 60 * 1000);
     updateClock();
 
@@ -250,12 +261,9 @@
 
     }, 1000);
   </script>
-
-  <div id="cleaning-mode" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:black; z-index:998; justify-content:center; align-items:center;">
-    <img src="cleaning_time.png" alt="清掃提醒" style="max-width:80%; height:auto;">
-  </div>
-
-
+<div id="cleaning-mode" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:black; z-index:998; justify-content:center; align-items:center;">
+<img alt="清掃提醒" src="cleaning_time.png" style="max-width:80%; height:auto;"/>
+</div>
 <script>
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('service-worker.js')
@@ -263,10 +271,5 @@
       .catch(err => console.log("❌ SW registration failed:", err));
   }
 </script>
-
-
-
-
-
 </body>
 </html>
