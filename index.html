@@ -149,6 +149,27 @@
 </script>
 </div>
 <script>
+let userExitPlayback = false;
+document.addEventListener("click", () => {
+  const garbageDiv = document.getElementById("garbage-mode");
+  const cleaningDiv = document.getElementById("cleaning-mode");
+  const music = document.getElementById("garbage-music");
+  const allContent = document.body.querySelectorAll("body > *:not(#garbage-mode):not(.persistent-ui):not(#cleaning-mode)");
+
+  if (garbageDiv.style.display === "flex" || cleaningDiv.style.display === "flex") {
+    userExitPlayback = true;
+    garbageDiv.style.display = "none";
+    cleaningDiv.style.display = "none";
+    allContent.forEach(el => el.style.display = "");
+    if (!music.paused) {
+      music.pause();
+      music.currentTime = 0;
+    }
+    console.log("🖱️ 使用者點擊，中斷播放畫面");
+  }
+});
+
+
 const music = document.getElementById("garbage-music");
 const authBtn = document.getElementById("sound-auth-btn");
 
@@ -239,7 +260,7 @@ authBtn.addEventListener("click", () => {
       const music = document.getElementById("garbage-music");
       const allContent = document.body.querySelectorAll("body > *:not(#garbage-mode):not(.persistent-ui):not(#cleaning-mode)");
 
-      if (isGarbageTime) {
+      if (isGarbageTime && !userExitPlayback) {
         garbageDiv.style.display = "flex";
         allContent.forEach(el => el.style.display = "none");
         if (music && music.paused) {
@@ -249,6 +270,7 @@ authBtn.addEventListener("click", () => {
 
       } else {
         garbageDiv.style.display = "none";
+    if (!isCleaningTime && !isGarbageTime) userExitPlayback = false;
         allContent.forEach(el => el.style.display = "");
         if (music && !music.paused) {
           music.pause();
@@ -260,13 +282,14 @@ authBtn.addEventListener("click", () => {
       const isCleaningTime = (h === 14 && m >= 51) || (h === 15 && m <= 5);
       const cleaningDiv = document.getElementById("cleaning-mode");
 
-      if (isCleaningTime) {
+      if (isCleaningTime && !userExitPlayback) {
         cleaningDiv.style.display = "flex";
         if (!garbageDiv || garbageDiv.style.display !== "flex") {
           allContent.forEach(el => el.style.display = "none");
         }
       } else {
         cleaningDiv.style.display = "none";
+    if (!isCleaningTime && !isGarbageTime) userExitPlayback = false;
         if (!garbageDiv || garbageDiv.style.display !== "flex") {
           allContent.forEach(el => el.style.display = "");
         }
