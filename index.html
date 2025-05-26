@@ -194,10 +194,10 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
-// 🔁 自動每 5 分鐘刷新頁面（使用 reload 保留 session）
+// 🔁 自動每 20 分鐘刷新頁面（使用 reload 保留 session）
 setInterval(() => {
   location.reload();
-}, 5 * 60 * 1000);
+}, 20 * 60 * 1000);
 
 // 📄 從 Google Sheets 讀取公告與跑馬燈文字
 fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vT4vzU7xZk5cwgUvNLxqjcDwn5ZnZ63o3XH8r5kK7oTvKQPSDjTezBWQbS-4wfyACro_-kCgJ1iNfFt/pub?output=csv')
@@ -269,7 +269,7 @@ setInterval(() => {
       start: [14, 51],
       end: [15, 5],
       image: "school_chiritori_houki.png",
-      audio: "ShutUpAndDance.mp3"
+      audio: "prayer.mp3"
     }
   ];
 
