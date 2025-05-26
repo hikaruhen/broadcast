@@ -261,6 +261,10 @@ authBtn.addEventListener("click", () => {
       const cleaningDiv = document.getElementById("cleaning-mode");
 
       if (isCleaningTime) {
+        if (music && music.paused) {
+          music.muted = false;
+          music.play().catch(() => console.log("音樂播放被阻擋（清掃）"));
+        }
         cleaningDiv.style.display = "flex";
         if (!garbageDiv || garbageDiv.style.display !== "flex") {
           allContent.forEach(el => el.style.display = "none");
