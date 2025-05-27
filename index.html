@@ -177,10 +177,10 @@ authBtn.addEventListener("click", () => {
       document.getElementById('clock').textContent = formatted;
     }
     setInterval(updateClock, 1000);
-    // 自動每 20 分鐘刷新
+    // 自動每 5 分鐘刷新
     setInterval(() => {
    location.reload();
-    }, 20 * 60 * 1000);
+    }, 5 * 60 * 1000);
     updateClock();
 
     fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vT4vzU7xZk5cwgUvNLxqjcDwn5ZnZ63o3XH8r5kK7oTvKQPSDjTezBWQbS-4wfyACro_-kCgJ1iNfFt/pub?output=csv')
